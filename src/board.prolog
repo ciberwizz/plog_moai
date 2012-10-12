@@ -1,11 +1,11 @@
 % Createn a new board
 new_board( X, Y, Board ):- create_board(X,Y,IBoard), blank_corners(IBoard,Board),
-		print_board(Board).
+		print_board(Board), !.
 
-create_board( _, 0, [] ).
+create_board( _, 0, [] ):- !.
 create_board( X, Y, [Line | Lines] ):- YN is Y-1, create_line(X,0, Line), 
 		create_board(X, YN, Lines).
-create_line( X, X, [] ).
+create_line( X, X, [] ):- !.
 create_line( X, LX, [' ' | Ls] ):- LLX is LX+1, create_line( X, LLX, Ls).
 
 blank_corners([Iline|Ilines],Board ):- blank_first_corners(Iline,Oline),
@@ -13,7 +13,7 @@ blank_corners([Iline|Ilines],Board ):- blank_first_corners(Iline,Oline),
 
 blank_first_corners( [_|IT], ['-'|OT] ):- blank_corner(IT,OT).
 
-blank_corner( [_|[]], ['-'|[]] ).
+blank_corner( [_|[]], ['-'|[]] ):- !.
 blank_corner( [IH|IT] ,[IH|OT] ):- blank_corner(IT,OT).
 
 blank_last_corners(Oline, Ilines, [Oline|OT] ):- blank_last(Ilines,OT).
@@ -49,13 +49,13 @@ print_separator( [_|T] ):- write('---|'), print_separator(T).
 
 /*
 [
- ['-',' ',' ',' ','C',' ',' ','-'],
- [' ',' ',' ',' ',' ',' ',' ',' '],
- [' ',' ',' ',' ',' ',' ',' ',' '],
+ ['-',' ','C',' ','C',' ',' ','-'],
+ ['C',' ',' ',' ',' ',' ',' ',' '],
+ ['P',' ','C',' ',' ',' ',' ',' '],
  ['C',' ',' ',' ','B',' ',' ',' '],
- [' ',' ',' ',' ',' ',' ',' ',' '], 
+ [' ',' ','C',' ',' ',' ',' ',' '], 
  [' ',' ',' ',' ',' ',' ','C',' '], 
- ['P',' ',' ',' ',' ',' ',' ',' '], 
+ [' ',' ',' ',' ',' ',' ',' ',' '], 
  ['-',' ',' ',' ',' ',' ',' ','-']
 ]
 */
