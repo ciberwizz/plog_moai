@@ -11,9 +11,9 @@ create_line( X, LX, [' ' | Ls] ):- LLX is LX+1, create_line( X, LLX, Ls).
 blank_corners([Iline|Ilines],Board ):- blank_first_corners(Iline,Oline),
 		blank_last_corners(Oline, Ilines, Board).
 
-blank_first_corners( [_|IT], ['-'|OT] ):- blank_corner(IT,OT).
+blank_first_corners( [_|IT], ['+'|OT] ):- blank_corner(IT,OT).
 
-blank_corner( [_|[]], ['-'|[]] ):- !.
+blank_corner( [_|[]], ['+'|[]] ):- !.
 blank_corner( [IH|IT] ,[IH|OT] ):- blank_corner(IT,OT).
 
 blank_last_corners(Oline, Ilines, [Oline|OT] ):- blank_last(Ilines,OT).
@@ -23,16 +23,27 @@ blank_last( [IH|IT], [IH|OT] ):- blank_last(IT,OT).
 
 %-----------------\\----------
 
+
+
+
+nth(1,[IH|_],IH):- !.
+nth(X,[_|OH],NTH) :- LX is X-1, nth(LX,OH,NTH).
+
+%check if it's vacant...
+vacant(X,Y,Board) :- nth(Y,Board,Row),
+		nth(X,Row,' ').
+
 % set piece on X Y in Board 
+set_piece( IBoard, Piece, X, Y, OBoard) :- vacant(X,Y,IBoard),
+					set_y_piece(IBoard, Piece, X, Y, 1, OBoard),!.
 
-% TODO
-set_piece( IBoard, Piece, X, Y, OBoard) :- set_y_piece(IBoard, Piece, X, Y, 1, OBoard).
+set_y_piece( [IH|IT], P, X, Y,  Y, [OH|IT]):- set_x_piece(IH,P,X,1,OH),!.
+set_y_piece( [IH|IT], P, X, Y,  LY, [IH|OT]) :- LYY is LY+1, 
+					set_y_piece(IT,P,X,Y,LYY,OT).
 
-set_y_piece( [IH|IT], P, X, Y,  Y, [OH|IT]):- write('====\n'),set_x_piece(IH,P,X,1,OH),!.
-set_y_piece( [IH|IT], P, X, Y,  LY, [IH|OT]) :- write('\n*'),write(LY),LYY is LY+1, set_y_piece(IT,P,X,Y,LYY,OT).
-
-set_x_piece( [_|IT], P, X, X, [OH|IT] ):- write('<=>\n'),OH = P,!.
-set_x_piece( [IH|IT], P, X, LX, [IH|OT] ):- write('<>\n'), LX is LX+1, set_x_piece(IT,P,X,LX,OT).
+set_x_piece( [_|IT], P, X, X, [P|IT] ):- !.
+set_x_piece( [IH|IT], P, X, LX, [IH|OT] ):- XLX is LX+1, 
+					set_x_piece(IT,P,X,XLX,OT).
 
 
 
@@ -60,9 +71,8 @@ print_separator( [_|T] ):- write('---|'), print_separator(T).
 ]
 */
 
-
+ 
 
 %mover(InBoard, XCounter, YCounter, Cor, PushPull, OutBoard).
 
-
-
+test(X,Y,OB) :- new_board(8,8,B), set_piece(B,'P', X,Y,OB), print_board(OB).
