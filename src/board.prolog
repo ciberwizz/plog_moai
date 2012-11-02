@@ -25,7 +25,7 @@ blank_last( [IH|IT], [IH|OT] ):- blank_last(IT,OT).
 
 
 
-
+%nth(Index to get, Input List, Output) 
 nth(1,[IH|_],IH):- !.
 nth(X,[_|OH],NTH) :- LX is X-1, nth(LX,OH,NTH).
 
@@ -71,8 +71,113 @@ print_separator( [_|T] ):- write('---|'), print_separator(T).
 ]
 */
 
- 
 
-%mover(InBoard, XCounter, YCounter, Cor, PushPull, OutBoard).
+%search_diagonal(Board,Piece_to_Search, XCounter,YCounter,XPiece,YPiece) =>output:xpiece,ypiece
+search_diagonal(Board, P, XC,YC,XP,YP) :- search_diagonal_forward(Board, P, XC,YC,XP,YP).
+search_diagonal(Board, P, XC,YC,XP,YP) :- search_diagonal_backward(Board, P, XC,YC,XP,YP).
+search_diagonal(Board, P, XC,YC,XP,YP) :- search_reverse_diagonal_forward(Board, P, XC,YC,XP,YP).
+search_diagonal(Board, P, XC,YC,XP,YP) :- search_reverse_diagonal_backward(Board, P, XC,YC,XP,YP).
 
-test(X,Y,OB) :- new_board(8,8,B), set_piece(B,'P', X,Y,OB), print_board(OB).
+
+search_diagonal_forward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_diagonal_forward(Board, P, XC,YC,XP,YP) :- TXC is XC + 1,
+						TYC is YC + 1,
+						search_diagonal_forward(Board, P, TXC,TYC,XP,YP).
+
+search_diagonal_backward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_diagonal_backward(Board, P, XC,YC,XP,YP) :- TXC is XC - 1,
+						TYC is YC - 1, 
+						search_diagonal_backward(Board, P, TXC,TYC,XP,YP).
+						
+%search_reverse_diagonal(Board,Piece_to_Search, XCounter,YCounter,XPiece,YPiece) =>output:xpiece,ypiece
+search_reverse_diagonal(Board, P, XC,YC,XP,YP) :- search_reverse_diagonal_forward(Board, P, XC,YC,XP,YP).
+search_reverse_diagonal(Board, P, XC,YC,XP,YP) :- search_reverse_diagonal_backward(Board, P, XC,YC,XP,YP).
+
+
+search_reverse_diagonal_forward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_reverse_diagonal_forward(Board, P, XC,YC,XP,YP) :- TXC is XC - 1,
+						TYC is YC + 1,
+						search_reverse_diagonal_forward(Board, P, TXC,TYC,XP,YP).
+
+search_reverse_diagonal_backward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_reverse_diagonal_backward(Board, P, XC,YC,XP,YP) :- TXC is XC + 1,
+						TYC is YC - 1, 
+						search_reverse_diagonal_backward(Board, P, TXC,TYC,XP,YP).
+
+%search_horizontal(Board,Piece_to_Search, XCounter,YCounter,XPiece,YPiece) =>output:xpiece,ypiece
+search_horizontal(Board, P, XC,YC,XP,YP) :- search_horizontal_forward(Board, P, XC,YC,XP,YP).
+search_horizontal(Board, P, XC,YC,XP,YP) :- search_horizontal_backward(Board, P, XC,YC,XP,YP).
+
+
+search_horizontal_forward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_horizontal_forward(Board, P, XC,YC,XP,YP) :- TXC is XC + 1,
+						search_horizontal_forward(Board, P, TXC,YC,XP,YP).
+
+search_horizontal_backward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_horizontal_backward(Board, P, XC,YC,XP,YP) :- TXC is XC - 1,
+						search_horizontal_backward(Board, P, TXC,YC,XP,YP).
+
+
+%search_vertical(Board,Piece_to_Search, XCounter,YCounter,XPiece,YPiece) =>output:xpiece,ypiece
+%com o OR logico
+%search_vertical(Board, P, XC,YC,XP,YP) :- search_vertical_forward(Board, P, XC,YC,XP,YP) ;
+%					search_vertical_backward(Board, P, XC,YC,XP,YP).
+search_vertical(Board, P, XC,YC,XP,YP) :- search_vertical_forward(Board, P, XC,YC,XP,YP).
+
+search_vertical(Board, P, XC,YC,XP,YP) :- search_vertical_backward(Board, P, XC,YC,XP,YP).
+
+
+search_vertical_forward(Board, P, XC,YC,XC,YC) :- nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_vertical_forward(Board, P, XC,YC,XP,YP) :- TYC is YC + 1,
+						search_vertical_forward(Board, P, XC,TYC,XP,YP).
+
+search_vertical_backward(Board, P, XC,YC,XC,YC) :- write('checking\n'),nth(YC,Board,Row),
+						nth(XC,Row,P),
+						write('found').
+						
+search_vertical_backward(Board, P, XC,YC,XP,YP) :- TYC is YC - 1, write('vertival'), 
+						search_vertical_backward(Board, P, XC,TYC,XP,YP).
+
+
+
+search_piece(Board,P,XC,YC,XP,YP) :- search_diagonal(Board, P, XC,YC,XP,YP).
+search_piece(Board,P,XC,YC,XP,YP) :- search_horizontal(Board, P, XC,YC,XP,YP).
+search_piece(Board,P,XC,YC,XP,YP) :- search_vertical(Board, P, XC,YC,XP,YP).
+
+
+test(X,Y,BOB) :- new_board(8,8,B), 
+		set_piece(B,'P', X,Y,OB),
+		CX is X, CY is Y-3,
+		set_piece(OB,'C', CX,CY,BOB),
+		print_board(BOB),
+		search_vertical(BOB,'P',CX,CY,_,_).
+		
+		
+		
+
+%mover(Input_Board, XCounter, YCounter, Piece_To_move, PushPull, Output_Board).
+%mover(IBoard, XC, YC, Piece, PushPull, OBoard) :- move_diagonal(IBoard, XC,YC,Piece,PushPull,OBoard).
+%mover(IBoard, XC, YC, Piece, PushPull, OBoard) :- move_horizontal(IBoard, XC,YC,Piece,PushPull,OBoard).
+%mover(IBoard, XC, YC, Piece, PushPull, OBoard) :- move_vertical(IBoard, XC,YC,Piece,PushPull,OBoard).
+		
