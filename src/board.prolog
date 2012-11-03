@@ -295,53 +295,40 @@ move(IBoard, XC, YC, Piece, PushPull, OBoard) :-
 
 move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_horizontal_forward(IBoard,Piece,XC,YC,_,YP),
-	push_horizontal_forward(IBoard, Piece,YP,OBoard),
-	write('moving push horizontal forward\n').
+	horizontal_forward(IBoard, Piece,YP,OBoard),
+	write('moving push horizontal forward\n\n').
 
 move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_horizontal_backward(IBoard,Piece,XC,YC,_,YP),
-	pull_horizontal_forward(IBoard, Piece,YP,OBoard),
-	write('moving pull horizontal forward\n').
+	horizontal_forward(IBoard, Piece,YP,OBoard),
+	write('moving pull horizontal forward\n\n').
 	
 move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_horizontal_backward(IBoard,Piece,XC,YC,_,YP),
-	write('moving push horizontal backward\n'),
-	push_horizontal_backward(IBoard, Piece,YP,OBoard).
+	horizontal_backward(IBoard, Piece,YP,OBoard),
+	write('moving push horizontal backward\n\n').
 
 move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_horizontal_forward(IBoard,Piece,XC,YC,_,YP),
-	pull_horizontal_backward(IBoard, Piece,YP,OBoard),
-	write('moving pull horizontal backward\n').
+	horizontal_backward(IBoard, Piece,YP,OBoard),
+	write('moving pull horizontal backward\n\n').
 
 
-
-
-move_diagonal(IBoard, XC,YC,Piece,PushPull,OBoard) :- 
-	search_diagonal(IBoard,Piece,XC,YC,XP,YP),
-	write('moving diagonal\n').
 
 move_vertical(IBoard, XC,YC,Piece,PushPull,OBoard) :- 
 	search_vertical(IBoard,Piece,XC,YC,XP,YP),
 	write('moving vertical\n').	
+
+
 	
+move_diagonal(IBoard, XC,YC,Piece,PushPull,OBoard) :- 
+	search_diagonal(IBoard,Piece,XC,YC,XP,YP),
+	write('moving diagonal\n').
 
 
 /*
  * horizontal move predicates..
  */
-
-push_horizontal_forward(IBoard, Piece, YPiece,OBoard) :-
-	horizontal_forward(IBoard, Piece, YPiece,OBoard).
-	
-pull_horizontal_forward(IBoard, Piece, YPiece,OBoard) :-
-	horizontal_forward(IBoard, Piece, YPiece,OBoard).
-	
-pull_horizontal_backward(IBoard, Piece, YPiece,OBoard) :-
-	horizontal_backward(IBoard, Piece, YPiece,OBoard).
-	
-push_horizontal_backward(IBoard, Piece, YPiece,OBoard) :-
-	horizontal_backward(IBoard, Piece, YPiece,OBoard).
-
 
 horizontal_forward([IH|IT], Piece, 1,[OH|IT]) :-
 	erase_horizontal_forward(IH,Piece,OH).
@@ -362,14 +349,27 @@ erase_horizontal_forward( [Piece|IT], Piece, [' '|OT] ) :-
 erase_horizontal_forward( [IH|IT], Piece, [IH|OT] ) :-
 	erase_horizontal_forward(IT,Piece,OT).
 
-push_h_f( [' '|[]], Piece, Piece):- 
+
+push_h_f( ' ', Piece, Piece):-
 	!,true.
+push_h_f( [' ',X|IT], Piece, [Piece,X|IT]):-
+	not(white(X)),!,true.
+push_h_f( [' ',' '],Piece,[' ',Piece]) :-
+	!, true. 
 push_h_f( [' ',' '|IT],Piece,[' '|OT]) :- 
 	push_h_f( [' '|IT], Piece, OT). 
-push_h_f( [' ',X|IT], Piece, [Piece,X|IT]):- 
-	!,true.	
-push_h_f( [_|_],_,_) :- 
-	!, false.
+
+
+white('C') :-
+	false.
+white('P') :-
+	false.
+white('B') :-
+	false.	
+white(_) :-
+	true.
+
+%psf([IH|IT],Piece,[OH|OT])
 
 
 /*
@@ -378,13 +378,58 @@ push_h_f( [_|_],_,_) :-
 
 
 
+vertical_up(IBoard,Piece,X,OBoard) :-
+	extract_column(IBoard,X,IL,OL,OBoard),
+	reverse(IL, REV_IL),
+	erase_horizontal_forward(REV_IL,Piece,REV_OL),
+	reverse(REV_OL,OL).
+
+vertical_down(IBoard,Piece,X,OBoard) :-
+	extract_column(IBoard,X,IL,OL,OBoard),
+	erase_horizontal_forward(IL,Piece,OL).
 
 
 
+/* extract_column(IBoard ,X , ILIST,OLIST, OBOARD).
+ * 
+ * IBoard -> input board
+ * X -> index of the column to extract
+ * ILIST -> input Column as a List
+ * OList -> output Column to manipulate.
+ * OBoard -> copy of IBoard but with the column X 
+ *       with the elements of LIST
+ */
+
+extract_column([],_,[],[],[]).
+extract_column([IH|IT], X, [ILH|ILT], [OLH|OLT], [OH|OT]) :- 
+	line_extract(IH,X,ILH,OLH,OH),
+	extract_column(IT,X,ILT,OLT,OT). 
+
+line_extract([IH|IT],1,IH,OH,[OH|IT]).
+line_extract([IH|IT],X,IL,OL,[IH|OT]) :-
+	TX is X - 1,
+	line_extract(IT,TX,IL,OL,OT).
+	
 
 
+test(B) :-test_vertical_down(B).
+
+test_vertical_down(B) :-
+	new_board(8,8,B),
+	set_piece(B,'P', 2,2,OB),
+	print_board(OB),
+	vertical_down(OB,'P',2,BOB),
+	print_board(BOB).
 
 
+test_vertical_up(B) :-
+	new_board(8,8,B),
+	set_piece(B,'P', 2,6,OB),
+	print_board(OB),
+	vertical_up(OB,'P',2,BOB),
+	print_board(BOB).
+
+	
 
 test_horizontal_move(B) :- 
 	new_board(8,8,B), 
