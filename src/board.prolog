@@ -89,15 +89,15 @@ print_separator( [_|T] ):-
 	print_separator(T).
 
 /*
-[
- ['-',' ','C',' ','C',' ',' ','-'],
- ['C',' ',' ',' ',' ',' ',' ',' '],
- ['P',' ','C',' ',' ',' ',' ',' '],
- ['C',' ',' ',' ','B',' ',' ',' '],
- [' ',' ','C',' ',' ',' ',' ',' '], 
- [' ',' ',' ',' ',' ',' ','C',' '], 
- [' ',' ',' ',' ',' ',' ',' ',' '], 
- ['-',' ',' ',' ',' ',' ',' ','-']
+[  1   2   3   4   5   6   7   8
+1['-',' ','C',' ','C',' ',' ','-'],
+2['C',' ',' ',' ',' ',' ',' ',' '],
+3['P',' ','C',' ',' ',' ',' ',' '],
+4['C',' ',' ',' ','B',' ',' ',' '],
+5[' ',' ','C',' ',' ',' ',' ',' '], 
+6[' ',' ',' ',' ',' ',' ','C',' '], 
+7[' ',' ',' ',' ',' ',' ',' ',' '], 
+8['-',' ',' ',' ',' ',' ',' ','-']
 ]
 */
 
@@ -291,7 +291,7 @@ move(IBoard, XC, YC, Piece, PushPull, OBoard) :-
 move(IBoard, XC, YC, Piece, PushPull, OBoard) :- 
 	move_vertical(IBoard, XC,YC,Piece,PushPull,OBoard).
 
-
+%HORIZONTAL
 
 move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_horizontal_forward(IBoard,Piece,XC,YC,_,YP),
@@ -313,13 +313,27 @@ move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :-
 	horizontal_backward(IBoard, Piece,YP,OBoard),
 	write('moving pull horizontal backward\n\n').
 
+%VERTICAL
 
+%counter is up fom piece
+move_vertical(IBoard, XC,YC,Piece,'push',OBoard) :- 
+	search_vertical_forward(IBoard,Piece,XC,YC,_,_), 
+	vertical_down(IBoard,Piece,XC,OBoard).	
+	
+move_vertical(IBoard, XC,YC,Piece,'pull',OBoard) :- 
+	search_vertical_forward(IBoard,Piece,XC,YC,_,_), 
+	vertical_up(IBoard,Piece,XC,OBoard).	
+	
+%counter is down fom piece
+move_vertical(IBoard, XC,YC,Piece,'push',OBoard) :- 
+	search_vertical_backward(IBoard,Piece,XC,YC,_,_), 
+	vertical_up(IBoard,Piece,XC,OBoard).	
+	
+move_vertical(IBoard, XC,YC,Piece,'pull',OBoard) :- 
+	search_vertical_backward(IBoard,Piece,XC,YC,_,_), 
+	vertical_down(IBoard,Piece,XC,OBoard).
 
-move_vertical(IBoard, XC,YC,Piece,PushPull,OBoard) :- 
-	search_vertical(IBoard,Piece,XC,YC,XP,YP),
-	write('moving vertical\n').	
-
-
+%DIAGONAL
 	
 move_diagonal(IBoard, XC,YC,Piece,PushPull,OBoard) :- 
 	search_diagonal(IBoard,Piece,XC,YC,XP,YP),
@@ -405,6 +419,7 @@ extract_column([IH|IT], X, [ILH|ILT], [OLH|OLT], [OH|OT]) :-
 	line_extract(IH,X,ILH,OLH,OH),
 	extract_column(IT,X,ILT,OLT,OT). 
 
+%line_extract(ILine,X,IX,OX,OBoard]).
 line_extract([IH|IT],1,IH,OH,[OH|IT]).
 line_extract([IH|IT],X,IL,OL,[IH|OT]) :-
 	TX is X - 1,
@@ -412,7 +427,99 @@ line_extract([IH|IT],X,IL,OL,[IH|OT]) :-
 	
 
 
-test(B) :-test_vertical_down(B).
+/*
+ *   Diagonal moves
+ */
+
+diagonal_down(IBoard,Piece,X,Y,OBoard):-
+	top_left(X,Y,TX,TY),
+	extract_diagonal(IBoard,TX,TY,IList,OList,OBoard),
+	erase_horizontal_forward(IList,Piece,OList).
+
+
+diagonal_up(IBoard,Piece,X,Y,OBoard):-
+	top_left(X,Y,TX,TY),
+	extract_diagonal(IBoard,TX,TY,IList,OList,OBoard),
+	reverse(IList,RIList),
+	erase_horizontal_forward(RIList,Piece,ROList),
+	reverse(ROList,OList).
+
+
+/* extract_diagonal(IBoard ,X,Y, ILIST,OLIST, OBOARD).
+ * 
+ * IBoard -> input board
+ * X -> index of the top_left diagonal
+ * Y -> index of the top_left diagonal
+ * ILIST -> input Column as a List
+ * OList -> output Column to manipulate.
+ * OBoard -> copy of IBoard but with the column X 
+ *       with the elements of LIST
+ */
+
+extract_diagonal([],_,_,[],[],[]) :-
+	!, true.
+extract_diagonal([IH|IT],X,_,[],[],[IH|IT]):-
+	LX is X-1,
+	length(IH,LX),
+	!, true.
+	
+extract_diagonal([IH|IT],X,1,[ILH|ILT],[OLH|OLT],[OH|OT]):- 
+	line_extract(IH,X,ILH,OLH,OH), 
+	TX is X+1,
+	extract_diagonal(IT,TX,1,ILT,OLT,OT).
+extract_diagonal([IH|IT],X,Y,IL,OL,[IH|OT]):-
+	TY is Y - 1,
+	extract_diagonal(IT,X,TY,IL,OL,OT).
+
+
+%top_left(Input_X, Intput_Y, Output_x,Output_Y
+%given an XY it gives the top diagonal.
+top_left(1,1,2,2).
+top_left(1,Y,1,Y).
+top_left(X,1,X,1).
+top_left(IX,IY,OX,OY) :- 
+	TX is IX - 1,
+	TY is IY - 1,
+	top_left(TX,TY,OX,OY). 
+
+
+
+
+
+top_right(_, X, 1, X, 1).
+top_right([HB|_], X, Y, X, Y) :-
+	length(HB, X).
+top_right([HB|_], X, 2, X, 2) :-
+	MaxX is X+1,
+	length(HB, MaxX). 
+top_right(_, X, Y, Ox, Oy) :-
+	XX is X+1,
+	YY is Y-1,
+	top_right(_, XX, YY, Ox, Oy).
+
+test(B) :-
+	test_diagonal_up(B). 
+	
+test_diagonal_up(B) :- 
+	new_board(8,8,B),
+	set_piece(B,'P', 5,6,OB),
+	print_board(OB),
+	diagonal_up(OB,'P',6,7,BOB),
+	print_board(BOB).
+
+test_diagonal_down(B) :- 
+	new_board(8,8,B),
+	set_piece(B,'P', 2,1,OB),
+	print_board(OB),
+	diagonal_down(OB,'P',5,4,BOB),
+	print_board(BOB).
+
+
+
+test_vertical(B) :-
+	test_vertical_down(B),
+	test_vertical_up(B).
+
 
 test_vertical_down(B) :-
 	new_board(8,8,B),
