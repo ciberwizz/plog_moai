@@ -86,37 +86,37 @@ new_game :-
 print_help :-
 	writeln('MOAI'),
 	writeln('====\n'),
-	writeln('Jogo para 2 jogadores, que vão alternando entre si, até que um'),
-	writeln('deixe de conseguir mover o seu peão, perdendo o jogo.'),
-	writeln('Cada jogador é representado por um peão no tabuleiro de jogo, comum a ambos'),
-	writeln('os jogadores existem os bloqueadores, peças colocadas no tabuleiro pelos'),
-	writeln('jogadores, um em cada jogada, uma vez colocados ficam fixos até ao final do jogo.'),
+	writeln('Jogo para 2 jogadores, que vï¿½o alternando entre si, atï¿½ que um'),
+	writeln('deixe de conseguir mover o seu peï¿½o, perdendo o jogo.'),
+	writeln('Cada jogador ï¿½ representado por um peï¿½o no tabuleiro de jogo, comum a ambos'),
+	writeln('os jogadores existem os bloqueadores, peï¿½as colocadas no tabuleiro pelos'),
+	writeln('jogadores, um em cada jogada, uma vez colocados ficam fixos atï¿½ ao final do jogo.'),
 	writeln('Joga-se num tabuleiro quadrado, originalmente de 8 por 8 casas.'),
-	writeln('Esta versão permite qualquer dimensão.'),
-	writeln('As casas dos cantos são excluídas do tabuleiro de jogo.'),
-	writeln('Cada jogada é composta por 2 ações:'),
-	writeln('1 - Colocação no tabuleiro de um bloqueador;'),
-	writeln('2 - Mover 1 peão, afastando ou aproximando-o do bloqueador acabado de colocar.'),
-	writeln('Apenas se pode mover o peão quando está em linha com o bloqueador, horizontal,'),
+	writeln('Esta versï¿½o permite qualquer dimensï¿½o.'),
+	writeln('As casas dos cantos sï¿½o excluï¿½das do tabuleiro de jogo.'),
+	writeln('Cada jogada ï¿½ composta por 2 aï¿½ï¿½es:'),
+	writeln('1 - Colocaï¿½ï¿½o no tabuleiro de um bloqueador;'),
+	writeln('2 - Mover 1 peï¿½o, afastando ou aproximando-o do bloqueador acabado de colocar.'),
+	writeln('Apenas se pode mover o peï¿½o quando estï¿½ em linha com o bloqueador, horizontal,'),
 	writeln('vertical ou diagonal.'),
-	writeln('Entre o bloqueador e o peão a mover tem de ser deixada uma casa vazia.'),
-	writeln('O movimento do peão é sempre feito até encontrar um obstáculo: bloqueador,'),
-	writeln('peão ou fronteira do tabuleiro.'),
-	writeln('Um jogador no inicio da sua vez tem de ser capaz de mover o seu peão de acordo'),
-	writeln('com as regras, mesmo que não seja essa a jogada que pretende realizar, se tal não'),
-	writeln('for possível, perde o jogo.'),
+	writeln('Entre o bloqueador e o peï¿½o a mover tem de ser deixada uma casa vazia.'),
+	writeln('O movimento do peï¿½o ï¿½ sempre feito atï¿½ encontrar um obstï¿½culo: bloqueador,'),
+	writeln('peï¿½o ou fronteira do tabuleiro.'),
+	writeln('Um jogador no inicio da sua vez tem de ser capaz de mover o seu peï¿½o de acordo'),
+	writeln('com as regras, mesmo que nï¿½o seja essa a jogada que pretende realizar, se tal nï¿½o'),
+	writeln('for possï¿½vel, perde o jogo.'),
 	writeln('').
 	
 % SETUP (PFR)
 setup_game :- 
-	writeln('Quantas linhas pretende no tabuleiro (mínimo 5): '),
+	writeln('Quantas linhas pretende no tabuleiro (mï¿½nimo 5, standard 8): '),
 	read_int(YSize),
-	writeln('Quantas colunas pretende no tabuleiro  (mínimo 5): '),
+	writeln('Quantas colunas pretende no tabuleiro  (mï¿½nimo 5, standard 8): '),
 	read_int(XSize),
 	new_board(XSize, YSize, Board),
-	writeln('Jogador branco é humano (s/n)'),
+	writeln('Jogador branco ï¿½ humano (s/n)'),
 	read_yn(JogBranco),
-	writeln('Jogador preto é humano (s/n)'),
+	writeln('Jogador preto ï¿½ humano (s/n)'),
 	read_yn(JogPreto),
 	jogadores(JogBranco, JogBranco).
 	
@@ -127,7 +127,7 @@ setup_game :-
 
 % START GAME	
 start_game :- 
-	writeln('Começar a jogar').
+	writeln('Comeï¿½ar a jogar').
 
 		
 
@@ -628,14 +628,14 @@ reverse_diagonal_up(IBoard,Piece,X,Y,OBoard):-
  *       with the elements of LIST
  */
  %y is bottom
-extract_reverse_diagonal([],_,_,[],[],[]) :- write('\n**1**'),
+extract_reverse_diagonal([],_,_,[],[],[]) :- 
 	!,true.
 	
 extract_reverse_diagonal([IBH|_],1,1,[],[], [IBH|[]]) :- 
-	line_extract(IBH,1,'+',_,_),write('\n**3**'),
+	line_extract(IBH,1,'+',_,_),
 	!,true.
 
-extract_reverse_diagonal([IBH|IBT],1,1,ILH,OLH, [OH|IBT]) :- write('\n**2**'),
+extract_reverse_diagonal([IBH|IBT],1,1,ILH,OLH, [OH|IBT]) :-
 	line_extract(IBH,1,ILH,OLH,OH),
 	!,true.
 
@@ -649,11 +649,11 @@ extract_reverse_diagonal( [IBH|IBT] ,X,Y, IList,OList, [IBH|OT]) :-
 	extract_reverse_diagonal(IBT,X,TY,IList,OList,OT).
 
 
-%top_right(IBoard,IBInput_X, Intput_Y, Output_x,Output_Y
+%top_right(Length(Iboard),IBInput_X, Intput_Y, Output_x,Output_Y
 %given an XY it gives the top diagonal.
 
 top_right(N, N, 1, X, 2) :-
-	X is N-1, write('fff\n'),
+	X is N-1,
 	!, true.
 top_right(_, X, 1, X, 1) :-
 	!,true.
@@ -665,6 +665,196 @@ top_right(N, X, Y, Ox, Oy) :-
 	top_right(N, XX, YY, Ox, Oy).
 
 
+
+%sequential_cell(List, Piece):-
+%check if there is 2 valid cells for movement
+
+
+sequential_cell(List,Piece) :-
+	sequential_cell_to(List,Piece,0).
+
+
+sequential_cell_to([Piece|LT], Piece, N):-
+	sequential_cell_from(LT,Piece,N).
+	
+sequential_cell_to([' '|LT], Piece, N):-
+	TN is N + 1,
+	sequential_cell_to(LT,Piece,TN).
+	
+sequential_cell_to([_|LT], Piece, _):-
+	sequential_cell_to(LT,Piece,0).
+
+
+
+sequential_cell_from(_, _, 2):-
+	!,true.
+	
+sequential_cell_from([], _, _):-
+	!,false.
+		
+sequential_cell_from([' '|LT], Piece, N):-
+	TN is N + 1,
+	sequential_cell_from(LT,Piece,TN).
+
+sequential_cell_from(_, _, _):-
+	!,false.
+
+%movable(IBoard, Piece, X,Y) :-
+%horizontal
+
+movable(IBoard, Piece, _,Y) :-
+	nth(Y,IBoard,Row),
+	sequential_cell(Row,Piece).
+	
+%vertical
+movable(IBoard,Piece,X,_) :-
+	extract_column(IBoard ,X , IList,_, _),
+	sequential_cell(IList,Piece).
+	
+%diagonal
+movable(IBoard,Piece,X,Y) :-
+	top_left(X,Y,TX,TY),
+	extract_diagonal(IBoard ,TX,TY, IList,_,_),
+	sequential_cell(IList,Piece).
+
+%reverse diagonal
+movable(IBoard,Piece,X,Y) :-
+	nth(1,IBoard,Row),
+	length(Row,Len),
+	top_right(Len,X,Y,TX,TY),
+	extract_reverse_diagonal(IBoard ,TX,TY, IList,_,_),
+	sequential_cell(IList,Piece).
+
+
+
+
+%test_movable_reverse_diagonal(B):-
+test(B):-
+
+	new_board(8,8,B),
+	set_piece(B,'P',4,4,BO),
+	
+	print_board(BO),
+	movable(BO,'P',4,4),
+	write('correct\n'),
+	
+	
+	set_piece(BO,'C',3,5,BOB1),
+	movable(BOB1,'P',4,4),
+	print_board(BOB1),
+	write('correct1\n'),
+	
+	
+	set_piece(BO,'C',6,2,BOBx),
+	set_piece(BOBx,'C',2,6,BOB2),
+	movable(BOB2,'P',4,4),
+	print_board(BOB2),
+	write('correct2\n'),
+		
+	set_piece(BO,'C',1,7,BOBs),
+	set_piece(BOBs,'C',5,3,BOB3),
+	movable(BOB3,'P',4,4),
+	print_board(BOB3),
+	write('correct3\n').
+
+
+test_movable_diagonal(B):-
+
+	new_board(8,8,B),
+	set_piece(B,'P',4,4,BO),
+	
+	print_board(BO),
+	movable(BO,'P',4,4),
+	write('correct\n'),
+	
+	
+	set_piece(BO,'C',5,5,BOB1),
+	movable(BOB1,'P',4,4),
+	print_board(BOB1),
+	write('correct1\n'),
+	
+	
+	set_piece(BO,'C',2,2,BOBx),
+	set_piece(BOBx,'C',6,6,BOB2),
+	movable(BOB2,'P',4,4),
+	print_board(BOB2),
+	write('correct2\n'),
+		
+	set_piece(BO,'C',7,7,BOBs),
+	set_piece(BOBs,'C',3,3,BOB3),
+	movable(BOB3,'P',4,4),
+	print_board(BOB3),
+	write('correct3\n').
+
+
+
+
+test_movable_vertical(B):-
+
+	new_board(8,8,B),
+	set_piece(B,'P',4,4,BO),
+	
+	print_board(BO),
+	movable(BO,'P',4,4),
+	write('correct\n'),
+	
+	
+	set_piece(BO,'C',4,5,BOB1),
+	movable(BOB1,'P',4,4),
+	print_board(BOB1),
+	write('correct1\n'),
+	
+	
+	set_piece(BO,'C',4,2,BOBx),
+	set_piece(BOBx,'C',4,6,BOB2),
+	movable(BOB2,'P',4,4),
+	print_board(BOB2),
+	write('correct2\n'),
+		
+	set_piece(BO,'C',4,7,BOBs),
+	set_piece(BOBs,'C',4,3,BOB3),
+	movable(BOB3,'P',4,4),
+	print_board(BOB3),
+	write('correct3\n').
+
+test_movable_horizontal(B):-
+
+	new_board(8,8,B),
+	set_piece(B,'P',4,4,BO),
+	
+	print_board(BO),
+	movable(BO,'P',4,4),
+	write('correct\n'),
+	
+	
+	set_piece(BO,'C',5,4,BOB1),
+	movable(BOB1,'P',4,4),
+	print_board(BOB1),
+	write('correct1\n'),
+	
+	
+	set_piece(BO,'C',2,4,BOBx),
+	set_piece(BOBx,'C',6,4,BOB2),
+	movable(BOB2,'P',4,4),
+	print_board(BOB2),
+	write('correct2\n'),
+		
+	set_piece(BO,'C',7,4,BOBs),
+	set_piece(BOBs,'C',3,4,BOB3),
+	movable(BOB3,'P',4,4),
+	print_board(BOB3),
+	write('correct3\n').
+	
+
+
+
+test_sequencial(_) :-	
+	sequential_cell(['P',' ',' ','B',' ',' ',' ',' '],'P'),write(['P',' ',' ','B',' ',' ',' ',' ']),write('correct\n'),
+	sequential_cell([' ','P',' ','B',' ',' ',' ',' '],'P'),write([' ','P',' ','B',' ',' ',' ',' ']),write('correct\n'),
+	sequential_cell([' ',' ','P','B',' ',' ',' ',' '],'P'),write([' ',' ','P','B',' ',' ',' ',' ']),write('correct\n'),
+	not(sequential_cell([' ',' ','C','P','B',' ',' ',' '],'P')),write([' ',' ','C','P','B',' ',' ',' ']),write('correct\n'),
+	sequential_cell([' ','C','P',' ',' ',' ',' ',' '],'P'),write([' ','C','P',' ',' ',' ',' ',' ']),write('correct\n'),
+	not(sequential_cell(['P','C',' ',' ',' ',' ',' ',' '],'P')),write(['P','C',' ',' ',' ',' ',' ',' ']),write('correct\n').
 
 
 test_reverse_diagonal(B) :-
