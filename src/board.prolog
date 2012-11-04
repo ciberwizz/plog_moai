@@ -8,14 +8,22 @@ nth(X,[_|OH],NTH) :-
 	
 %reverse list( input_list, output_list).
 reverse(A,B):- reverse_recursion(A,[],B).
-reverse_recursion([A|[]],L,[A|L]) :-write('*rev1-'),write(A),
+reverse_recursion([A|[]],L,[A|L]) :-
 	!,true.
 reverse_recursion([],L,L) :-
 	!,true.
-reverse_recursion([IH|IT],B,A) :- write('*rev2-'),write(IH),
+reverse_recursion([IH|IT],B,A) :-
 	reverse_recursion(IT,[IH|B],A).
 
+% Ler inteiros do teclado. (PFR)
+read_int(X):-read(X),integer(X),!. % Cut usado para parar ao ler um inteiro.
+read_int(X):-writeln('Erro, pretende-se um inteiro!'),read_int(X).
 
+% read a y\n input (PFR) 
+yesno(s).
+yesno(n).
+read_yn(X) :- read(X), yesno(X), !.   % Cut is used to stop when a yesno(X) char is read 
+read_yn(X) :- writeln('Erro, apenas s ou n!'), read_yn(X).
 
 
 % Createn a new board
@@ -67,6 +75,62 @@ set_x_piece( [IH|IT], P, X, LX, [IH|OT] ):-
 
 erase_piece(IBoard, X, Y, OBoard) :- 
 	set_y_piece(IBoard, ' ', X, Y, 1, OBoard),!.
+	
+% START (PFR)
+new_game :-
+	print_help,
+	setup_game,
+	start_game.
+
+% HELP (PFR)
+print_help :-
+	writeln('MOAI'),
+	writeln('====\n'),
+	writeln('Jogo para 2 jogadores, que vão alternando entre si, até que um'),
+	writeln('deixe de conseguir mover o seu peão, perdendo o jogo.'),
+	writeln('Cada jogador é representado por um peão no tabuleiro de jogo, comum a ambos'),
+	writeln('os jogadores existem os bloqueadores, peças colocadas no tabuleiro pelos'),
+	writeln('jogadores, um em cada jogada, uma vez colocados ficam fixos até ao final do jogo.'),
+	writeln('Joga-se num tabuleiro quadrado, originalmente de 8 por 8 casas.'),
+	writeln('Esta versão permite qualquer dimensão.'),
+	writeln('As casas dos cantos são excluídas do tabuleiro de jogo.'),
+	writeln('Cada jogada é composta por 2 ações:'),
+	writeln('1 - Colocação no tabuleiro de um bloqueador;'),
+	writeln('2 - Mover 1 peão, afastando ou aproximando-o do bloqueador acabado de colocar.'),
+	writeln('Apenas se pode mover o peão quando está em linha com o bloqueador, horizontal,'),
+	writeln('vertical ou diagonal.'),
+	writeln('Entre o bloqueador e o peão a mover tem de ser deixada uma casa vazia.'),
+	writeln('O movimento do peão é sempre feito até encontrar um obstáculo: bloqueador,'),
+	writeln('peão ou fronteira do tabuleiro.'),
+	writeln('Um jogador no inicio da sua vez tem de ser capaz de mover o seu peão de acordo'),
+	writeln('com as regras, mesmo que não seja essa a jogada que pretende realizar, se tal não'),
+	writeln('for possível, perde o jogo.'),
+	writeln('').
+	
+% SETUP (PFR)
+setup_game :- 
+	writeln('Quantas linhas pretende no tabuleiro (mínimo 5): '),
+	read_int(YSize),
+	writeln('Quantas colunas pretende no tabuleiro  (mínimo 5): '),
+	read_int(XSize),
+	new_board(XSize, YSize, Board),
+	writeln('Jogador branco é humano (s/n)'),
+	read_yn(JogBranco),
+	writeln('Jogador preto é humano (s/n)'),
+	read_yn(JogPreto),
+	jogadores(JogBranco, JogBranco).
+	
+	
+% Falta predicado para definir jogador como humano ou computador.
+	jogadores(JogB, JogP) :- !.
+		
+
+% START GAME	
+start_game :- 
+	writeln('Começar a jogar').
+
+		
+
 
 print_board( [LastLine | [] ] ):- 
 	print_line( LastLine), 
@@ -362,27 +426,25 @@ horizontal_backward([IH|IT], Piece, YPiece,[IH|OT]) :-
 	L is YPiece - 1,
 	horizontal_backward(IT, Piece, L, OT). 
 
-erase_horizontal_forward( [Piece|IT], Piece, [' '|OT] ) :-write(IT),write('*to push\n'),
+erase_horizontal_forward( [Piece|IT], Piece, [' '|OT] ) :-
 	push_h_f(IT,Piece,OT),
 	!,true.
 erase_horizontal_forward( [IH|IT], Piece, [IH|OT] ) :-
 	erase_horizontal_forward(IT,Piece,OT).
 
 %push_h_f(ILst,piece,OList).
-push_h_f( [],_,_) :-  write('entrou0'),
+push_h_f( [],_,_) :-
 	!,false.
-%push_h_f( [X],_,_) :-  write('po crl!:'),char_code(X,L),write(L),write('*'),
+%push_h_f( [X],_,_) :-
 %	!,false.
 
-push_h_f( [' '], Piece, Piece):- write('entrou1'),
+push_h_f( [' '], Piece, Piece):-
 	!,true.
-push_h_f( [' '|[]], Piece, Piece):- write('entrou2'),
-	!,true,write(' pushed!?\n').
-push_h_f( [' ',X|IT], Piece, [Piece,X|IT]):-write('test1\n'),
-	not(white(X)),write('test1\n'),!,true.
-%push_h_f( [' ',' '],Piece,[' ',Piece]) :-
-%	!, true. 
-push_h_f( [' ',' '|IT],Piece,[' '|OT]) :- write('entrou3'),
+push_h_f( [' '|[]], Piece, Piece):-
+	!,true.
+push_h_f( [' ',X|IT], Piece, [Piece,X|IT]):-
+	not(white(X)),!,true.
+push_h_f( [' ',' '|IT],Piece,[' '|OT]) :-
 	push_h_f( [' '|IT], Piece, OT). 
 
 
@@ -431,8 +493,6 @@ extract_column([IH|IT], X, [ILH|ILT], [OLH|OLT], [OH|OT]) :-
 	extract_column(IT,X,ILT,OLT,OT). 
 
 %line_extract(+ILine,+X,-IX,-OX,-OLine]).
-%line_extract(['+'|IT],1,[],[],[]) :-
-%	!,false.
 line_extract([IH|IT],1,IH,OH,[OH|IT]) :-
 	!,true.
 line_extract([IH|IT],X,IL,OL,[IH|OT]) :-
