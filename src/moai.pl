@@ -8,7 +8,6 @@ nth(X,[_|OH],NTH) :-
 	
 
 %search_piece(IBoard,Piece,X,Y):-
-
 search_piece(IBoard,Piece,X,Y):-
 	search_piece_y(IBoard,Piece,1,X,Y).
 
@@ -113,25 +112,24 @@ new_game :-
 print_help :-
 	writeln('MOAI'),
 	writeln('====\n'),
-	writeln('Jogo para 2 jogadores, que v�o alternando entre si, at� que um'),
-	writeln('deixe de conseguir mover o seu pe�o, perdendo o jogo.'),
-	writeln('Cada jogador � representado por um pe�o no tabuleiro de jogo, comum a ambos'),
-	writeln('os jogadores existem os bloqueadores, pe�as colocadas no tabuleiro pelos'),
-	writeln('jogadores, um em cada jogada, uma vez colocados ficam fixos at� ao final do jogo.'),
+	writeln('Jogo para 2 jogadores, que vao alternando entre si, ate que um'),
+	writeln('deixe de conseguir mover a sua peca, perdendo o jogo.'),
+	writeln('Cada jogador e representado por uma peca no tabuleiro de jogo.'),
+	writeln('Comum a ambos os jogadores, sao os bloqueadores, pecas colocadas no tabuleiro'),
+	writeln(', uma em cada jogada. Uma vez colocados ficam fixos ate ao final do jogo.'),
 	writeln('Joga-se num tabuleiro quadrado, originalmente de 8 por 8 casas.'),
-	writeln('Esta vers�o permite qualquer dimens�o.'),
-	writeln('As casas dos cantos s�o exclu�das do tabuleiro de jogo.'),
-	writeln('Cada jogada � composta por 2 a��es:'),
-	writeln('1 - Coloca��o no tabuleiro de um bloqueador;'),
-	writeln('2 - Mover 1 pe�o, afastando ou aproximando-o do bloqueador acabado de colocar.'),
-	writeln('Apenas se pode mover o pe�o quando est� em linha com o bloqueador, horizontal,'),
+	writeln('Esta versao permite qualquer dimensao.'),
+	writeln('As casas dos cantos sao excluidas do tabuleiro de jogo.'),
+	writeln('Cada jogada e composta por 2 acoes:'),
+	writeln('1 - Colocacao de um bloqueador;'),
+	writeln('2 - Mover 1 peca, afastando ou aproximando-o do bloqueador acabado de colocar.'),
+	writeln('Apenas se pode mover peca quando esta em linha com o bloqueador, horizontal,'),
 	writeln('vertical ou diagonal.'),
-	writeln('Entre o bloqueador e o pe�o a mover tem de ser deixada uma casa vazia.'),
-	writeln('O movimento do pe�o � sempre feito at� encontrar um obst�culo: bloqueador,'),
-	writeln('pe�o ou fronteira do tabuleiro.'),
-	writeln('Um jogador no inicio da sua vez tem de ser capaz de mover o seu pe�o de acordo'),
-	writeln('com as regras, mesmo que n�o seja essa a jogada que pretende realizar, se tal n�o'),
-	writeln('for poss�vel, perde o jogo.'),
+	writeln('O movimento do peca e sempre feito ate encontrar um obstaculo: bloqueador,'),
+	writeln('peca ou fronteira do tabuleiro.'),
+	writeln('Um jogador no inicio da sua vez tem de ser capaz de mover a sua peca de acordo'),
+	writeln('com as regras, mesmo que nao seja essa a jogada que pretende realizar, se tal nao'),
+	writeln('for possivel, perde o jogo.'),
 	writeln('').
 	
 % SETUP (PFR)
@@ -141,16 +139,6 @@ setup_game(Board) :-
 	writeln('Quantas colunas pretende no tabuleiro  (m�nimo 5, standard 8): '),
 	read_int(XSize),
 	new_board(XSize, YSize, Board).
-	/*
-	writeln('Jogador branco � humano (s/n)'),
-	read_yn(JogBranco),
-	writeln('Jogador preto � humano (s/n)'),
-	read_yn(JogPreto),
-	jogadores(JogBranco, JogBranco).*/
-	
-	
-% Falta predicado para definir jogador como humano ou computador.
-	%jogadores(JogB, JogP) :- !.
 		
 init_posicoes(IBoard,OBoard):-
 	writeln('Jogador Branco indique a sua posição inicial'),
@@ -207,17 +195,16 @@ next_piece('P','B').
 next_piece('B','P').
 
 %make_a_move(IBoard,Push,Jog,X,Y,OBoard).
-make_a_move(IBoard,s,s,X,Y,OBoard):-write('yyyy1\n'),
-	move(IBoard,X,Y,'P','push',OBoard),write('XXXXX1\n').
-make_a_move(IBoard,s,n,X,Y,OBoard):-write('yyyy2\n'),
-	move(IBoard,X,Y,'P','pull',OBoard),write('XXXXX2\n').
-make_a_move(IBoard,n,s,X,Y,OBoard):-write('yyyy3\n'),
-	move(IBoard,X,Y,'B','push',OBoard),write('XXXXX3\n').
-make_a_move(IBoard,n,n,X,Y,OBoard):-write('yyyy4\n'),
-	move(IBoard,X,Y,'B','pull',OBoard),write('XXXXX4\n').	
-make_a_move(_,P,T,_,_,_):-
-	write('Piece '),write(P),write('action '),write(T),
-	write('MAKE A MOVE FAILOU\n'),!,false.
+make_a_move(IBoard,s,s,X,Y,OBoard):-
+	move(IBoard,X,Y,'P','push',OBoard).
+make_a_move(IBoard,s,n,X,Y,OBoard):-
+	move(IBoard,X,Y,'P','pull',OBoard).
+make_a_move(IBoard,n,s,X,Y,OBoard):-
+	move(IBoard,X,Y,'B','push',OBoard).
+make_a_move(IBoard,n,n,X,Y,OBoard):-
+	move(IBoard,X,Y,'B','pull',OBoard).	
+make_a_move(_,P,T,_,_,_):-	
+	write('wrong move\n'),!,false.
 
 
 print_board( [LastLine | [] ] ):- 
@@ -243,20 +230,6 @@ print_separator( [_|[]] ):-
 print_separator( [_|T] ):- 
 	write('---|'), 
 	print_separator(T).
-
-/*
-[  1   2   3   4   5   6   7   8
-1['-',' ','C',' ','C',' ',' ','-'],
-2['C',' ',' ',' ',' ',' ',' ',' '],
-3['P',' ','C',' ',' ',' ',' ',' '],
-4['C',' ',' ',' ','B',' ',' ',' '],
-5[' ',' ','C',' ',' ',' ',' ',' '], 
-6[' ',' ',' ',' ',' ',' ','C',' '], 
-7[' ',' ',' ',' ',' ',' ',' ',' '], 
-8['-',' ',' ',' ',' ',' ',' ','-']
-]
-*/
-
 
 
 %search_diagonal(Board,Piece_to_Search, XCounter,YCounter,XPiece,YPiece) =>output:xpiece,ypiece
@@ -444,28 +417,20 @@ move(IBoard, XC, YC, Piece, PushPull, OBoard) :-
 
 %HORIZONTAL
 
-move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- write('fuuuuu0'),
+move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_horizontal_forward(IBoard,Piece,XC,YC,XP,YP),
-	write('\nXP='),write(XP),write('YP='),writeln(YP),
-	write('moving push horizontal forward\n\n'),
 	horizontal_forward(IBoard, Piece,YP,OBoard).
 
-move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- write('fuuuuu1'),
+move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_horizontal_backward(IBoard,Piece,XC,YC,XP,YP),
-	write('\nXP='),write(XP),write('YP='),writeln(YP),
-	write('moving pull horizontal forward\n\n'),
 	horizontal_forward(IBoard, Piece,YP,OBoard).
 	
-move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- write('fuuuuu2'),
+move_horizontal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_horizontal_backward(IBoard,Piece,XC,YC,XP,YP),
-	write('\nXP='),write(XP),write('YP='),writeln(YP),
-	write('moving push horizontal backward\n\n'),
 	horizontal_backward(IBoard, Piece,YP,OBoard).
 
-move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- write('fuuuuu3'),
+move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_horizontal_forward(IBoard,Piece,XC,YC,XP,YP),
-	write('\nXP='),write(XP),write('YP='),writeln(YP),
-	write('moving pull horizontal backward\n\n'),
 	horizontal_backward(IBoard, Piece,YP,OBoard).
 
 %VERTICAL
@@ -473,23 +438,19 @@ move_horizontal(IBoard, XC,YC,Piece,'pull',OBoard) :- write('fuuuuu3'),
 %counter is up fom piece
 move_vertical(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_vertical_forward(IBoard,Piece,XC,YC,_,_), 
-	write('vertical_forward down\n\n'),
 	vertical_down(IBoard,Piece,XC,OBoard).	
 	
 move_vertical(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_vertical_forward(IBoard,Piece,XC,YC,_,_),
-	write('vertical_forward up\n\n'), 
 	vertical_up(IBoard,Piece,XC,OBoard).	
 	
 %counter is down fom piece
 move_vertical(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_vertical_backward(IBoard,Piece,XC,YC,_,_),
-	write('vertical_backward up\n\n'), 
 	vertical_up(IBoard,Piece,XC,OBoard).	
 	
 move_vertical(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_vertical_backward(IBoard,Piece,XC,YC,_,_),
-	write('vertical_backward down\n\n'), 
 	vertical_down(IBoard,Piece,XC,OBoard).
 
 %DIAGONAL
@@ -497,26 +458,22 @@ move_vertical(IBoard, XC,YC,Piece,'pull',OBoard) :-
 move_diagonal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_diagonal_forward(IBoard,Piece,XC,YC,_,_),
 	top_left(XC,YC,TXC,TYC),
-	write('moving push down diagonal\n'),
 	diagonal_down(IBoard,Piece,TXC,TYC,OBoard).
 	
 move_diagonal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_diagonal_forward(IBoard,Piece,XC,YC,_,_),
 	top_left(XC,YC,TXC,TYC),
-	write('moving pull up diagonal\n'),
 	diagonal_up(IBoard,Piece,TXC,TYC,OBoard).
 	
 		
 move_diagonal(IBoard, XC,YC,Piece,'push',OBoard) :- 
 	search_diagonal_backward(IBoard,Piece,XC,YC,_,_),
 	top_left(XC,YC,TXC,TYC),
-	write('moving push up diagonal\n'),
 	diagonal_up(IBoard,Piece,TXC,TYC,OBoard).
 	
 move_diagonal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_diagonal_backward(IBoard,Piece,XC,YC,_,_),
 	top_left(XC,YC,TXC,TYC),
-	write('moving pull down diagonal\n'),
 	diagonal_down(IBoard,Piece,TXC,TYC,OBoard).
 
 
@@ -526,14 +483,12 @@ move_reverse_diagonal(IBoard, XC,YC,Piece,'push',OBoard) :-
 	search_reverse_diagonal_forward(IBoard,Piece,XC,YC,_,_),
 	nth(1,IBoard,Row), length(Row,N),
 	top_right(N,XC,YC,TXC,TYC),
-	write('moving push down reverse_diagonal\n'),
 	diagonal_down(IBoard,Piece,TXC,TYC,OBoard).
 	
 move_reverse_diagonal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_reverse_diagonal_forward(IBoard,Piece,XC,YC,_,_),
 	nth(1,IBoard,Row), length(Row,N),
 	top_right(N,XC,YC,TXC,TYC),
-	write('moving pull up reverse_diagonal\n'),
 	diagonal_up(IBoard,Piece,TXC,TYC,OBoard).
 	
 		
@@ -541,14 +496,12 @@ move_reverse_diagonal(IBoard, XC,YC,Piece,'push',OBoard) :-
 	search_reverse_diagonal_backward(IBoard,Piece,XC,YC,_,_),
 	nth(1,IBoard,Row), length(Row,N),
 	top_right(N,XC,YC,TXC,TYC),
-	write('moving push up reverse_diagonal\n'),
 	diagonal_up(IBoard,Piece,TXC,TYC,OBoard).
 	
 move_reverse_diagonal(IBoard, XC,YC,Piece,'pull',OBoard) :- 
 	search_reverse_diagonal_backward(IBoard,Piece,XC,YC,_,_),
 	nth(1,IBoard,Row), length(Row,N),
 	top_right(N,XC,YC,TXC,TYC),
-	write('moving pull down reverse_diagonal\n'),
 	diagonal_down(IBoard,Piece,TXC,TYC,OBoard).
 
 
@@ -566,23 +519,6 @@ move_piece(B, X, Y, NX, NY, OB):-
  * horizontal move predicates..
  */
 
-/*
-horizontal_forward([IH|IT], Piece, 1,[OH|IT]) :-
-	erase_horizontal_forward(IH,Piece,OH).
-horizontal_forward([IH|IT], Piece, YPiece,[IH|OT]) :-
-	L is YPiece - 1,
-	horizontal_forward(IT, Piece, L, OT). 
-
-horizontal_backward([IH|IT], Piece, 1,[OH|IT]) :-
-	reverse(IH,REV),
-	erase_horizontal_forward(REV,Piece,OREV), 
-	reverse(OREV,OH).
-horizontal_backward([IH|IT], Piece, YPiece,[IH|OT]) :-
-	L is YPiece - 1,
-	horizontal_backward(IT, Piece, L, OT). 
-
-
-*/
 horizontal_forward(IB, Piece,_,OB) :-
 	search_piece(IB,Piece,X,Y),
 	horizontal_forward_(IB,X,Y,_,OB).
@@ -624,11 +560,6 @@ erase_horizontal_forward( [Piece|IT], Piece, [' '|OT] ) :-
 erase_horizontal_forward( [IH|IT], Piece, [IH|OT] ) :-
 	erase_horizontal_forward(IT,Piece,OT).
 
-%push_h_f(ILst,piece,OList).
-%push_h_f( [],_,_) :-
-%	!,false.
-%push_h_f( [X],_,_) :-
-%	!,false.
 
 push_h_f( [' '], Piece, Piece):-
 	!,true.
@@ -644,8 +575,6 @@ white(' ') :-
 	true.	
 white(_) :-
 	false.
-
-%psf([IH|IT],Piece,[OH|OT])
 
 
 /*
@@ -792,17 +721,6 @@ reverse_diag_up_(IB, X, Y,TB,OB) :-
 
 
 
-
-/* OLD
-%up => expl. y = [7..2]
-reverse_diagonal_up(IBoard,Piece,X,Y,OBoard):- 
-	nth(1,IBoard,Row),length(Row,N),
-	top_right(N,X,Y,TX,TY), write('\nTX= '),write(TX),write(' TY= '),write(TY),write('\n'),
-	extract_reverse_diagonal(IBoard,TX,TY,IList,OList,OBoard),write(IList),write(OList),write('extract\n'),
-	reverse(IList,REV_IL),write(REV_IL),write('reverse1\n'),
-	erase_horizontal_forward(REV_IL,Piece,REV_OL),write(REV_OL),write('erase\n'),
-	reverse(REV_OL,OList),write('reverse2\n').
-*/	
 /* reverse_extract_diagonal(IBoard ,X,Y, ILIST,OLIST, OBOARD).
  * 
  * IBoard -> input board
@@ -1224,4 +1142,4 @@ test_horizontal(B) :-
 	search_horizontal(B,'P',4,1,_,_),write('horizontal_backward check\n'),
 	not(search_horizontal(B,'P',2,4,_,_)),write('horizontal_forward check\n').
 
-%test_horizontal()
+
