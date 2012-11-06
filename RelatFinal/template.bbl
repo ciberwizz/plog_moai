@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{CodigoSite}
+Autor(es).
+\newblock Nome da referencia.
+\newblock http://www.fe.up.pt, Ano da pagina.
+\newblock Online em Setembro 2011.
+
+\bibitem{CodigoLivro}
+Donald~E. Knuth.
+\newblock {\em The {{\TeX}book}}.
+\newblock Addison-Wesley, 1984.
+
+\end{thebibliography}

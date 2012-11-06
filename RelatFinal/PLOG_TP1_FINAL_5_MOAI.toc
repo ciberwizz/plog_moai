@@ -1,0 +1,15 @@
+\select@language {portuguese}
+\contentsline {section}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{4}
+\contentsline {section}{\numberline {2}Descri\IeC {\c c}\IeC {\~a}o do Problema}{4}
+\contentsline {section}{\numberline {3}Arquitetura do Sistema}{4}
+\contentsline {subsection}{\numberline {3.1}Comunica\IeC {\c c}\IeC {\~a}o por sockets}{4}
+\contentsline {section}{\numberline {4}M\IeC {\'o}dulo de L\IeC {\'o}gica do Jogo}{6}
+\contentsline {subsection}{\numberline {4.1}Visualiza\IeC {\c c}\IeC {\~a}o do Estado do Jogo}{6}
+\contentsline {subsection}{\numberline {4.2}Valida\IeC {\c c}\IeC {\~a}o de Jogadas}{7}
+\contentsline {subsection}{\numberline {4.3}Execu\IeC {\c c}\IeC {\~a}o de Jogadas}{8}
+\contentsline {subsection}{\numberline {4.4}Final do Jogo}{8}
+\contentsline {subsection}{\numberline {4.5}Rotina de jogo}{8}
+\contentsline {section}{\numberline {5}Interface com o Utilizador}{9}
+\contentsline {section}{\numberline {6}Conclus\IeC {\~o}es e Perspetivas de Desenvolvimento}{10}
+\contentsline {section}{Bibliografia}{11}
+\contentsline {section}{\numberline {A}Nome do Anexo A}{12}

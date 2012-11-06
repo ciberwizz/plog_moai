@@ -1,0 +1,105 @@
+\documentclass[15pt,a4paper]{article}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{verbatim}
+
+
+\begin{document}
+
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{22cm}
+
+\title{\Huge\textbf{Moai}\linebreak\linebreak\linebreak
+\Large\textbf{Relatório Intercalar}\linebreak\linebreak
+\includegraphics[height=6cm, width=7cm]{feup.pdf}\linebreak \linebreak
+\Large{Mestrado Integrado em Engenharia Informática e Computação} \linebreak \linebreak
+\Large{Programação em Lógica}\linebreak
+}
+
+\author{\textbf{Grupo 5:}\\ Paulo Jorge de Faria dos Reis - 080509037 \\ Miguel Rossi Seabra - 060509054 \\\linebreak\linebreak \\
+ \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
+\linebreak\linebreak\vspace{1cm}}
+%\date{4 de Novembro de 2012}
+\maketitle
+\thispagestyle{empty}
+
+%************************************************************************************************
+%************************************************************************************************
+
+\newpage
+
+\section*{Resumo}
+Pretende-se com este relatório apresentar o procedimento seguido pelo grupo de trabalho no desenvolvimento em Prolog do jogo "Moai".
+\\
+Será disponibilizada informação relativamente ao jogo em termos de regras, descrição do tabuleiro, opções tomadas pelo grupo em pontos onde a informação do criador do daquele não é clara e também uma apresentação dos predicados de Prolog que vão ser utilizados para o desenvolvimento do projeto.
+
+\newpage
+
+\tableofcontents
+
+%************************************************************************************************
+%************************************************************************************************
+
+%*************************************************************************************************
+%************************************************************************************************
+
+\newpage
+
+\section{Introdução}
+A implementação das regras de um jogo de tabuleiro recente, utilizando programação em lógica apresenta um desafio aliciante, ao mesmo tempo que possibilita o contacto e desenvolvimento de capacidades nesta área aos elementos envolvidos no desenvolvimento deste sistema. É também de ressalvar a criação de um programa funcional que permite a realização de partidas de ''Moai'' onde os intervenientes podem ser humanos ou computadores, e neste caso tendo o sistema capacidades mínimas de realizar jogadas válidas de acordo com as regras. A versão base apenas permitirá a interação em modo de texto através da consolo de Prolog, podendo no entanto ser providenciada a integração com interface gráfico.
+
+%*************************************************************************************************
+%************************************************************************************************
+
+\section{Descrição do Problema}
+O jogo foi criado por Rey Alicea em 2012 \cite{gamegeek}, e não existe qualquer referência histórica deste. Pelo que nos apercebemos o jogo encontra-se ainda num estádio de revisão do mesmo. A descrição das regras \cite{blog, gamegeek} não são claras o suficiente, deixando muito espaço para a interpretação das mesmas, assim a equipa de desenvolvimento das regras em Prolog decidiu utilizar a regras conforme se explica mais adiante.
+\\
+São necessários dois jogadores para realizar uma partida de "Moai".
+
+\section{Arquitetura do Sistema}
+Descrever em linhas gerais o sistema e os módulos que o constituem. Deve ser abordada a comunicação com o visualizador, que mesmo que ainda não esteja implementada, já deverá estar pensada. Assim, deve ser incluída a sintaxe das mensagens a trocar com o visualizador.
+
+\section{Módulo de Lógica do Jogo}
+Descrever o projecto e implementação do módulo Prolog, incluindo a forma de representação do estado do tabuleiro,  verificação do cumprimento das regras do jogo, determinação do final do jogo e cálculo das jogadas a realizar pelo computador  utilizando diversos níveis de jogo.
+
+\subsection{Representação do Estado do Jogo} \textit{estado(?Tabuleiro).}
+\subsection{Visualização do Estado do Jogo} \textit{visualiza\_estado(+Tabuleiro).}
+\subsection{Validação de Jogadas} \textit{movimento\_valido(?Jogada, +Tabuleiro).}
+\subsection{Execução de Jogadas}\textit{executa\_movimento(+Jogada, + Tabuleiro, -NovoTabuleiro).}
+\subsection{Lista de Jogadas Válidas}\textit{lista\_jogadas(+Tabuleiro, -ListaJogadas).}
+\subsection{Avaliação do Tabuleiro}\textit{avalia\_tabuleiro(+Tabuleiro, -Valor).}
+\subsection{Final do Jogo} \textit{fim\_jogo(+Tabuleiro, -Vencedor).}
+\subsection{Cálculo da Jogada do Computador}\textit{calcula\_jogada(+Nível, +Tabuleiro, -Jogada).}
+\subsection{Recepção de mensagem do visualizador}\textit{recebe\_mensagem(+ Mensagem, - Resposta).}
+
+\section{Interface com o Utilizador}
+Não foi implementado o módulo de comunicação com o visualizador. A Interface com o utilizador é feita através de predicados do próprio Prolog.
+Para iniciar um novo jogo deve-se utilizador o predicado \textit{new_game}, de seguida devemos informar as dimensões do tabuleiro que pretendemos utilizar, para tal devem ser introduzido um valor inteiro seguido de . (ponto) para cada uma das dimensões.
+Uma vez que cada jogador pode ser controlado por um humano ou pela AI do computador, temos de responder cada um dos jogadores é humano ou não usando \textit{s} ou \textit{n}.
+A partir deste ponto o jogo inicia-se começando pelo Jogador Branco e alternando com o Jogador Preto até que se alcance a condição de vitória (derrota) de um deles, terminando assim o jogo.
+
+\section{Conclusões e Perspetivas de Desenvolvimento}
+Utilizar o Prolog para definir as regras de um jogo é algo relativamente simples, sendo apenas necessário a definição de um conjunto de predicados (regras) que descrevam o que é ou não possível fazer no jogo. A comunicação com o utilizador é bem complicada de desenvolver neste contexto.
+\\
+A definição de regras passa pela elaboração de factos que definem condições de paragem e clausulas com predicados que permitem o processamento de casos gerais.
+
+
+Que conclusões  retira deste projecto? Como poderia melhorar o trabalho desenvolvido?
+
+\clearpage
+\addcontentsline{toc}{section}{Bibliografia}
+\renewcommand\refname{Bibliografia}
+\bibliographystyle{plain}
+\bibliography{myrefs}
+
+\listoffigures
+
+\newpage
+\appendix
+\section{Nome do Anexo A}
+Código Prolog implementado devidamente comentado e outros elementos úteis que não sejam essenciais ao relatório.
+
+\end{document}
